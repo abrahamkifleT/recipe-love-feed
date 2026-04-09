@@ -11,6 +11,7 @@ import buddhaImg from "@/assets/buddha-bowl.jpg";
 import lavaImg from "@/assets/lava-cake.jpg";
 import salmonImg from "@/assets/salmon.jpg";
 import pizzaImg from "@/assets/pizza.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const recipes = [
   {
