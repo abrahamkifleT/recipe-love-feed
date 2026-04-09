@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, ChefHat } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
@@ -120,14 +120,49 @@ const Index = () => {
       </header>
 
       {/* Hero */}
-      <section className="container max-w-7xl mx-auto px-4 pt-10 pb-6">
-        <h2 className="text-4xl sm:text-5xl text-foreground leading-tight max-w-lg">
-          Discover & share<br />
-          <span className="text-primary">delicious recipes</span>
-        </h2>
-        <p className="mt-3 text-muted-foreground max-w-md">
-          Explore community-curated meals, from quick weekday dinners to show-stopping desserts.
-        </p>
+      <section className="relative overflow-hidden container max-w-7xl mx-auto px-4 pt-16 pb-12 sm:pt-20 sm:pb-16">
+        {/* Decorative blobs */}
+        <div className="absolute -top-24 -right-24 w-72 h-72 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
+            🔥 Over 10,000 recipes shared by home cooks
+          </span>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl text-foreground leading-tight tracking-tight">
+            Cook, Share &{" "}
+            <span className="text-primary relative">
+              Inspire
+              <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 8" fill="none">
+                <path d="M2 6C50 2 150 2 198 6" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" />
+              </svg>
+            </span>
+          </h2>
+          <p className="mt-5 text-lg text-muted-foreground max-w-lg leading-relaxed">
+            Join a community of passionate home cooks. Discover mouthwatering recipes, save your favourites, and share your own culinary creations.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            <Button size="lg" className="gap-2 rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
+              Explore Recipes
+              <ChefHat size={18} />
+            </Button>
+            <AddRecipeDialog
+              trigger={
+                <Button size="lg" variant="outline" className="gap-2 rounded-full px-8">
+                  <Plus size={18} />
+                  Share Yours
+                </Button>
+              }
+            />
+          </div>
+          <div className="flex items-center gap-6 mt-10 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5"><span className="text-foreground font-semibold">10K+</span> Recipes</span>
+            <span className="w-1 h-1 rounded-full bg-border" />
+            <span className="flex items-center gap-1.5"><span className="text-foreground font-semibold">5K+</span> Cooks</span>
+            <span className="w-1 h-1 rounded-full bg-border" />
+            <span className="flex items-center gap-1.5"><span className="text-foreground font-semibold">50+</span> Cuisines</span>
+          </div>
+        </div>
       </section>
 
       {/* Content */}
