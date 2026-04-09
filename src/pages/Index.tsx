@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, ChefHat } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
