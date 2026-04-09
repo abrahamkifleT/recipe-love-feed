@@ -121,16 +121,23 @@ const Index = () => {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden container max-w-7xl mx-auto px-4 pt-16 pb-12 sm:pt-20 sm:pb-16">
-        {/* Decorative blobs */}
-        <div className="absolute -top-24 -right-24 w-72 h-72 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative overflow-hidden rounded-2xl mx-4 sm:mx-auto max-w-7xl mt-4 sm:mt-6">
+        {/* Background image */}
+        <img
+          src={heroBg}
+          alt=""
+          width={1920}
+          height={1080}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
-        <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
+        <div className="relative flex flex-col items-center text-center max-w-2xl mx-auto px-4 pt-16 pb-12 sm:pt-24 sm:pb-20">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm text-white text-sm font-medium mb-6 animate-fade-in border border-white/20">
             🔥 Over 10,000 recipes shared by home cooks
           </span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl text-foreground leading-tight tracking-tight">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl text-white leading-tight tracking-tight drop-shadow-lg">
             Cook, Share &{" "}
             <span className="text-primary relative">
               Inspire
@@ -139,29 +146,29 @@ const Index = () => {
               </svg>
             </span>
           </h2>
-          <p className="mt-5 text-lg text-muted-foreground max-w-lg leading-relaxed">
+          <p className="mt-5 text-lg text-white/80 max-w-lg leading-relaxed drop-shadow">
             Join a community of passionate home cooks. Discover mouthwatering recipes, save your favourites, and share your own culinary creations.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            <Button size="lg" className="gap-2 rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
+            <Button size="lg" className="gap-2 rounded-full px-8 shadow-lg shadow-primary/30 hover:shadow-primary/40 transition-shadow">
               Explore Recipes
               <ChefHat size={18} />
             </Button>
             <AddRecipeDialog
               trigger={
-                <Button size="lg" variant="outline" className="gap-2 rounded-full px-8">
+                <Button size="lg" variant="outline" className="gap-2 rounded-full px-8 border-white/30 text-white hover:bg-white/10 hover:text-white">
                   <Plus size={18} />
                   Share Yours
                 </Button>
               }
             />
           </div>
-          <div className="flex items-center gap-6 mt-10 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5"><span className="text-foreground font-semibold">10K+</span> Recipes</span>
-            <span className="w-1 h-1 rounded-full bg-border" />
-            <span className="flex items-center gap-1.5"><span className="text-foreground font-semibold">5K+</span> Cooks</span>
-            <span className="w-1 h-1 rounded-full bg-border" />
-            <span className="flex items-center gap-1.5"><span className="text-foreground font-semibold">50+</span> Cuisines</span>
+          <div className="flex items-center gap-6 mt-10 text-sm text-white/60">
+            <span className="flex items-center gap-1.5"><span className="text-white font-semibold">10K+</span> Recipes</span>
+            <span className="w-1 h-1 rounded-full bg-white/30" />
+            <span className="flex items-center gap-1.5"><span className="text-white font-semibold">5K+</span> Cooks</span>
+            <span className="w-1 h-1 rounded-full bg-white/30" />
+            <span className="flex items-center gap-1.5"><span className="text-white font-semibold">50+</span> Cuisines</span>
           </div>
         </div>
       </section>
