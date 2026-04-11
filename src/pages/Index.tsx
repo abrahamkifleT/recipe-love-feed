@@ -174,7 +174,7 @@ const Index = () => {
       </section>
 
       {/* Content */}
-      <div className="container max-w-7xl mx-auto px-4 mt-12 sm:mt-20 pb-16 flex gap-8">
+      <div className="container max-w-7xl mx-auto px-4 pt-10 pb-16 flex gap-8">
         <RecipeSidebar
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
