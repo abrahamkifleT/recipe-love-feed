@@ -121,7 +121,7 @@ const Index = () => {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl mx-4 sm:mx-auto max-w-7xl mt-4 sm:mt-6">
+      <section className="relative overflow-hidden rounded-2xl mx-4 sm:mx-auto max-w-7xl mt-4 sm:mt-6 mb-6">
         {/* Background image */}
         <img
           src={heroBg}
