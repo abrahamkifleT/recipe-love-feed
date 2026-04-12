@@ -19,18 +19,27 @@ import {
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const RECIPES_PER_PAGE = 9;
   const { user, signOut } = useAuth();
   const { data: recipes, isLoading } = useRecipes();
   const navigate = useNavigate();
 
-  const filtered = (recipes ?? []).filter((r) => {
+  const filtered = useMemo(() => (recipes ?? []).filter((r) => {
     const matchesCategory = !selectedCategory || r.tags.includes(selectedCategory);
     const matchesSearch =
       !searchQuery ||
       r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (r.author_name ?? "").toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }), [recipes, selectedCategory, searchQuery]);
+
+  const totalPages = Math.ceil(filtered.length / RECIPES_PER_PAGE);
+  const paginatedRecipes = filtered.slice((currentPage - 1) * RECIPES_PER_PAGE, currentPage * RECIPES_PER_PAGE);
+
+  // Reset to page 1 when filters change
+  const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); };
+  const handleSearchChange = (val: string) => { setSearchQuery(val); setCurrentPage(1); };
 
   const getInitials = () => {
     if (!user) return "?";
