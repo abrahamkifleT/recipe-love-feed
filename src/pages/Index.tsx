@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Search, Plus, LogIn } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Search, Plus, LogIn, ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
@@ -19,18 +19,27 @@ import {
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const RECIPES_PER_PAGE = 9;
   const { user, signOut } = useAuth();
   const { data: recipes, isLoading } = useRecipes();
   const navigate = useNavigate();
 
-  const filtered = (recipes ?? []).filter((r) => {
+  const filtered = useMemo(() => (recipes ?? []).filter((r) => {
     const matchesCategory = !selectedCategory || r.tags.includes(selectedCategory);
     const matchesSearch =
       !searchQuery ||
       r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (r.author_name ?? "").toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }), [recipes, selectedCategory, searchQuery]);
+
+  const totalPages = Math.ceil(filtered.length / RECIPES_PER_PAGE);
+  const paginatedRecipes = filtered.slice((currentPage - 1) * RECIPES_PER_PAGE, currentPage * RECIPES_PER_PAGE);
+
+  // Reset to page 1 when filters change
+  const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); };
+  const handleSearchChange = (val: string) => { setSearchQuery(val); setCurrentPage(1); };
 
   const getInitials = () => {
     if (!user) return "?";
@@ -50,7 +59,7 @@ const Index = () => {
               type="text"
               placeholder="Search recipes..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-full bg-secondary text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring transition-all"
             />
           </div>
@@ -94,7 +103,7 @@ const Index = () => {
       </header>
 
       <div className="container max-w-7xl mx-auto px-4 pt-10 pb-16 flex gap-8 flex-1">
-        <RecipeSidebar selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+        <RecipeSidebar selectedCategory={selectedCategory} onSelectCategory={handleCategoryChange} />
 
         <main className="flex-1 min-w-0">
           <div className="sm:hidden mb-4 relative">
@@ -103,7 +112,7 @@ const Index = () => {
               type="text"
               placeholder="Search recipes..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-full bg-secondary text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
@@ -123,22 +132,60 @@ const Index = () => {
           ) : filtered.length === 0 ? (
             <p className="text-center text-muted-foreground py-12">No recipes found. Be the first to add one!</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filtered.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  id={recipe.id}
-                  title={recipe.title}
-                  author={recipe.author_name ?? "Unknown"}
-                  image={recipe.image_url}
-                  cookTime={recipe.cook_time}
-                  servings={recipe.servings}
-                  tags={recipe.tags}
-                  likeCount={recipe.like_count}
-                  likedByMe={recipe.liked_by_me}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {paginatedRecipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    id={recipe.id}
+                    title={recipe.title}
+                    author={recipe.author_name ?? "Unknown"}
+                    image={recipe.image_url}
+                    cookTime={recipe.cook_time}
+                    servings={recipe.servings}
+                    tags={recipe.tags}
+                    likeCount={recipe.like_count}
+                    likedByMe={recipe.liked_by_me}
+                  />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-10">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === 1}
+                    onClick={() => { setCurrentPage((p) => p - 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    className="gap-1"
+                  >
+                    <ChevronLeft size={16} /> Previous
+                  </Button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={page === currentPage ? "default" : "outline"}
+                      size="sm"
+                      className="w-9 h-9 p-0"
+                      onClick={() => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === totalPages}
+                    onClick={() => { setCurrentPage((p) => p + 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    className="gap-1"
+                  >
+                    Next <ChevronRight size={16} />
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>
