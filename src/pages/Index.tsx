@@ -59,7 +59,7 @@ const Index = () => {
               type="text"
               placeholder="Search recipes..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-full bg-secondary text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring transition-all"
             />
           </div>
@@ -103,7 +103,7 @@ const Index = () => {
       </header>
 
       <div className="container max-w-7xl mx-auto px-4 pt-10 pb-16 flex gap-8 flex-1">
-        <RecipeSidebar selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+        <RecipeSidebar selectedCategory={selectedCategory} onSelectCategory={handleCategoryChange} />
 
         <main className="flex-1 min-w-0">
           <div className="sm:hidden mb-4 relative">
@@ -112,7 +112,7 @@ const Index = () => {
               type="text"
               placeholder="Search recipes..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-full bg-secondary text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
