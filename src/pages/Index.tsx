@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, LogIn } from "lucide-react";
+import { Search, Plus, LogIn, ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
