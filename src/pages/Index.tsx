@@ -108,6 +108,16 @@ const Index = () => {
             />
           </div>
 
+          {!user && (
+            <div className="mb-6 p-6 rounded-xl bg-primary/5 border border-primary/10 text-center">
+              <p className="text-foreground font-medium mb-2">Want to share your own recipes?</p>
+              <p className="text-sm text-muted-foreground mb-4">Sign in to add, like, and share recipes with the community.</p>
+              <Button onClick={() => navigate("/auth")} className="gap-1.5">
+                <LogIn size={16} /> Sign In to Add Recipes
+              </Button>
+            </div>
+          )}
+
           {isLoading ? (
             <p className="text-center text-muted-foreground py-12">Loading recipes...</p>
           ) : filtered.length === 0 ? (
