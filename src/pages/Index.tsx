@@ -69,7 +69,7 @@ const Index = () => {
               <>
                 <AddRecipeDialog
                   trigger={
-                    <Button size="sm" className="gap-1.5 bg-primary text-primary-foreground shadow-md hover:bg-primary/90 font-semibold">
+                    <Button size="sm" className="gap-1.5 bg-accent text-accent-foreground shadow-md hover:bg-accent/90 font-semibold">
                       <Plus size={16} />
                       <span className="hidden sm:inline">Add Recipe</span>
                     </Button>
