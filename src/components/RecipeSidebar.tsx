@@ -51,7 +51,7 @@ const RecipeSidebar = ({ selectedCategory, onSelectCategory }: RecipeSidebarProp
                 onClick={() => onSelectCategory(cat.name)}
                 className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                   selectedCategory === cat.name
-                    ? "bg-primary/10 text-primary font-medium"
+                    ? "bg-accent/10 text-accent font-medium"
                     : "text-muted-foreground hover:bg-secondary"
                 }`}
               >
