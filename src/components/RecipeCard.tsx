@@ -73,11 +73,11 @@ const RecipeCard = ({ id, title, author, image, cookTime, servings, tags, likeCo
               size={18}
               className={`transition-all duration-200 ${
                 likedByMe
-                  ? "fill-primary text-primary scale-110"
-                  : "text-muted-foreground group-hover/like:text-primary"
+                  ? "fill-accent text-accent scale-110"
+                  : "text-muted-foreground group-hover/like:text-accent"
               }`}
             />
-            <span className={likedByMe ? "text-primary font-medium" : "text-muted-foreground"}>
+            <span className={likedByMe ? "text-accent font-medium" : "text-muted-foreground"}>
               {likeCount}
             </span>
           </button>
