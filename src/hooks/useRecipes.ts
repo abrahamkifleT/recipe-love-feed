@@ -67,7 +67,24 @@ export const useToggleLike = () => {
         await supabase.from("recipe_likes").insert({ recipe_id: recipeId, user_id: user.id });
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["recipes"] }),
+    onMutate: async ({ recipeId, liked }) => {
+      await queryClient.cancelQueries({ queryKey: ["recipes"] });
+      const previous = queryClient.getQueryData<RecipeWithAuthor[]>(["recipes", user?.id]);
+      queryClient.setQueryData<RecipeWithAuthor[]>(["recipes", user?.id], (old) =>
+        old?.map((r) =>
+          r.id === recipeId
+            ? { ...r, liked_by_me: !liked, like_count: liked ? r.like_count - 1 : r.like_count + 1 }
+            : r
+        )
+      );
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["recipes", user?.id], context.previous);
+      }
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["recipes"] }),
   });
 };
 
