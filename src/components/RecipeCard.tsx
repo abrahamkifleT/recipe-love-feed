@@ -20,7 +20,8 @@ const RecipeCard = ({ id, title, author, image, cookTime, servings, tags, likeCo
   const toggleLike = useToggleLike();
   const navigate = useNavigate();
 
-  const handleLike = () => {
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!user) {
       navigate("/auth");
       return;
@@ -29,7 +30,7 @@ const RecipeCard = ({ id, title, author, image, cookTime, servings, tags, likeCo
   };
 
   return (
-    <div className="group rounded-xl overflow-hidden bg-card shadow-card hover:shadow-card-hover transition-all duration-300">
+    <div className="group rounded-xl overflow-hidden bg-card shadow-card hover:shadow-card-hover transition-all duration-300 cursor-pointer" onClick={() => navigate(`/recipe/${id}`)}>
       <div className="relative overflow-hidden aspect-[4/3]">
         <img
           src={image || "/placeholder.svg"}
