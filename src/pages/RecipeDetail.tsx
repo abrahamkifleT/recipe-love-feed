@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRecipeById } from "@/hooks/useRecipes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToggleLike } from "@/hooks/useRecipes";
+import demoVideo from "@/assets/demo-recipe-video.mp4.asset.json";
 
 const RecipeDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -109,19 +110,22 @@ const RecipeDetail = () => {
         </div>
 
         {/* Video */}
-        {recipe.video_url && (
-          <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-foreground">Recipe Video</h3>
-            <div className="rounded-2xl overflow-hidden">
-              <video
-                src={recipe.video_url}
-                controls
-                className="w-full rounded-2xl"
-                preload="metadata"
-              />
+        {(() => {
+          const videoSrc = recipe.video_url || demoVideo.url;
+          return videoSrc ? (
+            <div className="space-y-3">
+              <h3 className="text-xl font-semibold text-foreground">Recipe Video</h3>
+              <div className="rounded-2xl overflow-hidden">
+                <video
+                  src={videoSrc}
+                  controls
+                  className="w-full rounded-2xl"
+                  preload="metadata"
+                />
+              </div>
             </div>
-          </div>
-        )}
+          ) : null;
+        })()}
 
         {/* Ingredients */}
         {recipe.ingredients.length > 0 && (
