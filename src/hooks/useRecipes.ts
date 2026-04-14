@@ -6,6 +6,7 @@ export interface RecipeWithAuthor {
   id: string;
   title: string;
   image_url: string | null;
+  video_url: string | null;
   cook_time: string | null;
   servings: number | null;
   tags: string[];
