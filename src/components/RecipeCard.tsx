@@ -20,7 +20,8 @@ const RecipeCard = ({ id, title, author, image, cookTime, servings, tags, likeCo
   const toggleLike = useToggleLike();
   const navigate = useNavigate();
 
-  const handleLike = () => {
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!user) {
       navigate("/auth");
       return;
