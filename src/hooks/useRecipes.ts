@@ -54,6 +54,42 @@ export const useRecipes = () => {
   });
 };
 
+export const useRecipeById = (id: string) => {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ["recipe", id, user?.id],
+    queryFn: async (): Promise<RecipeWithAuthor | null> => {
+      const { data: recipe, error } = await supabase
+        .from("recipes")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!recipe) return null;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("user_id", recipe.user_id)
+        .maybeSingle();
+
+      const { data: likes } = await supabase
+        .from("recipe_likes")
+        .select("user_id")
+        .eq("recipe_id", id);
+
+      return {
+        ...recipe,
+        author_name: profile?.display_name ?? "Unknown",
+        like_count: likes?.length ?? 0,
+        liked_by_me: user ? (likes ?? []).some((l) => l.user_id === user.id) : false,
+      };
+    },
+  });
+};
+
 export const useToggleLike = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
