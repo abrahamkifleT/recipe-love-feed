@@ -108,6 +108,21 @@ const RecipeDetail = () => {
           )}
         </div>
 
+        {/* Video */}
+        {recipe.video_url && (
+          <div className="space-y-3">
+            <h3 className="text-xl font-semibold text-foreground">Recipe Video</h3>
+            <div className="rounded-2xl overflow-hidden">
+              <video
+                src={recipe.video_url}
+                controls
+                className="w-full rounded-2xl"
+                preload="metadata"
+              />
+            </div>
+          </div>
+        )}
+
         {/* Ingredients */}
         {recipe.ingredients.length > 0 && (
           <div className="space-y-3">

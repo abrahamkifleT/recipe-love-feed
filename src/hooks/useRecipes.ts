@@ -6,6 +6,7 @@ export interface RecipeWithAuthor {
   id: string;
   title: string;
   image_url: string | null;
+  video_url: string | null;
   cook_time: string | null;
   servings: number | null;
   tags: string[];
@@ -131,6 +132,7 @@ export const useCreateRecipe = () => {
     mutationFn: async (recipe: {
       title: string;
       image_url?: string;
+      video_url?: string;
       ingredients: string[];
       instructions: string;
       cook_time: string;

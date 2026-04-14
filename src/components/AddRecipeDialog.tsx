@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Clock, ImagePlus } from "lucide-react";
+import { Plus, X, Clock, ImagePlus, Video } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +31,8 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const { user } = useAuth();
@@ -51,6 +53,14 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
     }
   };
 
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+      setVideoPreview(URL.createObjectURL(file));
+    }
+  };
+
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
@@ -66,6 +76,8 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
     setSelectedTags([]);
     setImageFile(null);
     setImagePreview(null);
+    setVideoFile(null);
+    setVideoPreview(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,7 +89,7 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
     setSubmitting(true);
     try {
       let image_url: string | undefined;
-
+      let video_url: string | undefined;
       if (imageFile) {
         const ext = imageFile.name.split(".").pop();
         const path = `${user.id}/${Date.now()}.${ext}`;
@@ -89,9 +101,21 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
         image_url = urlData.publicUrl;
       }
 
+      if (videoFile) {
+        const ext = videoFile.name.split(".").pop();
+        const path = `${user.id}/${Date.now()}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from("recipe-videos")
+          .upload(path, videoFile);
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage.from("recipe-videos").getPublicUrl(path);
+        video_url = urlData.publicUrl;
+      }
+
       await createRecipe.mutateAsync({
         title,
         image_url,
+        video_url,
         ingredients: ingredients.filter((i) => i.trim()),
         instructions,
         cook_time: cookTime,
@@ -139,7 +163,21 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-foreground">Tags</label>
+            <label className="text-sm font-medium text-foreground">Video (optional)</label>
+            <label className="border-2 border-dashed border-border rounded-xl p-6 flex flex-col items-center gap-2 text-muted-foreground cursor-pointer hover:border-primary/40 transition-colors">
+              {videoPreview ? (
+                <video src={videoPreview} className="w-full h-32 object-cover rounded-lg" controls />
+              ) : (
+                <>
+                  <Video size={32} />
+                  <span className="text-sm">Click to upload a video</span>
+                </>
+              )}
+              <input type="file" accept="video/*" className="hidden" onChange={handleVideoChange} />
+            </label>
+          </div>
+
+          <div className="space-y-1.5">
             <div className="flex flex-wrap gap-2">
               {availableTags.map((tag) => (
                 <button
