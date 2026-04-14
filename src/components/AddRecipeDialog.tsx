@@ -163,7 +163,21 @@ const AddRecipeDialog = ({ trigger }: AddRecipeDialogProps) => {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-foreground">Tags</label>
+            <label className="text-sm font-medium text-foreground">Video (optional)</label>
+            <label className="border-2 border-dashed border-border rounded-xl p-6 flex flex-col items-center gap-2 text-muted-foreground cursor-pointer hover:border-primary/40 transition-colors">
+              {videoPreview ? (
+                <video src={videoPreview} className="w-full h-32 object-cover rounded-lg" controls />
+              ) : (
+                <>
+                  <Video size={32} />
+                  <span className="text-sm">Click to upload a video</span>
+                </>
+              )}
+              <input type="file" accept="video/*" className="hidden" onChange={handleVideoChange} />
+            </label>
+          </div>
+
+          <div className="space-y-1.5">
             <div className="flex flex-wrap gap-2">
               {availableTags.map((tag) => (
                 <button
