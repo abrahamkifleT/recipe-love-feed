@@ -131,6 +131,7 @@ export const useCreateRecipe = () => {
     mutationFn: async (recipe: {
       title: string;
       image_url?: string;
+      video_url?: string;
       ingredients: string[];
       instructions: string;
       cook_time: string;
