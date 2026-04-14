@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRecipeById } from "@/hooks/useRecipes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToggleLike } from "@/hooks/useRecipes";
+import demoVideo from "@/assets/demo-recipe-video.mp4.asset.json";
 
 const RecipeDetail = () => {
   const { id } = useParams<{ id: string }>();
