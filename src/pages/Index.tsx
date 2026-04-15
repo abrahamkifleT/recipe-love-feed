@@ -66,7 +66,27 @@ const Index = () => {
             />
           </div>
 
-          <div className="flex items-center gap-3 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+            {/* Mobile/Tablet filter button */}
+            <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="lg:hidden gap-1.5 relative">
+                  <SlidersHorizontal size={16} />
+                  <span className="hidden sm:inline">Filters</span>
+                  {selectedCategory && (
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-accent" />
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-80 p-0">
+                <SheetHeader className="p-5 pb-0">
+                  <SheetTitle>Browse Recipes</SheetTitle>
+                </SheetHeader>
+                <div className="p-5 overflow-y-auto max-h-[calc(100vh-4rem)]">
+                  <RecipeSidebar selectedCategory={selectedCategory} onSelectCategory={handleCategoryChange} mobile />
+                </div>
+              </SheetContent>
+            </Sheet>
             {user ? (
               <>
                 <AddRecipeDialog
