@@ -21,6 +21,7 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterOpen, setFilterOpen] = useState(false);
   const RECIPES_PER_PAGE = 9;
   const { user, signOut } = useAuth();
   const { data: recipes, isLoading } = useRecipes();
