@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, Users, Heart } from "lucide-react";
+import { ArrowLeft, Clock, Users, Heart, X, Maximize } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRecipeById } from "@/hooks/useRecipes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToggleLike } from "@/hooks/useRecipes";
 import demoVideo from "@/assets/demo-recipe-video.mp4.asset.json";
+import { useState, useRef, useCallback } from "react";
 
 const RecipeDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +13,8 @@ const RecipeDetail = () => {
   const { user } = useAuth();
   const { data: recipe, isLoading } = useRecipeById(id!);
   const toggleLike = useToggleLike();
+  const [showVideo, setShowVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleLike = () => {
     if (!user) {
@@ -22,6 +25,14 @@ const RecipeDetail = () => {
       toggleLike.mutate({ recipeId: recipe.id, liked: recipe.liked_by_me });
     }
   };
+
+  const handleFullscreen = useCallback(() => {
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      }
+    }
+  }, []);
 
   if (isLoading) {
     return (
@@ -45,8 +56,46 @@ const RecipeDetail = () => {
     .map((s) => s.trim())
     .filter(Boolean) ?? [];
 
+  const videoSrc = recipe.video_url || demoVideo.url;
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Video Overlay */}
+      {showVideo && videoSrc && (
+        <div className="fixed inset-0 z-[100] bg-black/80 flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3">
+            <h3 className="text-white font-semibold text-lg">Recipe Video</h3>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleFullscreen}
+                className="text-white hover:bg-white/20"
+              >
+                <Maximize size={20} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowVideo(false)}
+                className="text-white hover:bg-white/20"
+              >
+                <X size={20} />
+              </Button>
+            </div>
+          </div>
+          <div className="flex-1 flex items-start justify-center px-4 pb-4">
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              controls
+              autoPlay
+              className="w-full max-w-4xl rounded-2xl max-h-[80vh]"
+            />
+          </div>
+        </div>
+      )}
+
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b">
         <div className="container max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
@@ -90,9 +139,9 @@ const RecipeDetail = () => {
             >
               <Heart
                 size={18}
-                className={recipe.liked_by_me ? "fill-accent text-accent" : "text-muted-foreground hover:text-accent"}
+                className={recipe.liked_by_me ? "fill-[hsl(var(--like-active))] text-[hsl(var(--like-active))]" : "text-muted-foreground hover:text-[hsl(var(--like-active))]"}
               />
-              <span className={recipe.liked_by_me ? "text-accent font-medium" : "text-muted-foreground"}>
+              <span className={recipe.liked_by_me ? "text-[hsl(var(--like-active))] font-medium" : "text-muted-foreground"}>
                 {recipe.like_count}
               </span>
             </button>
@@ -109,23 +158,17 @@ const RecipeDetail = () => {
           )}
         </div>
 
-        {/* Video */}
-        {(() => {
-          const videoSrc = recipe.video_url || demoVideo.url;
-          return videoSrc ? (
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-foreground">Recipe Video</h3>
-              <div className="rounded-2xl overflow-hidden">
-                <video
-                  src={videoSrc}
-                  controls
-                  className="w-full rounded-2xl"
-                  preload="metadata"
-                />
-              </div>
-            </div>
-          ) : null;
-        })()}
+        {/* Watch Video Link */}
+        {videoSrc && (
+          <div>
+            <button
+              onClick={() => setShowVideo(true)}
+              className="text-accent font-semibold text-lg underline underline-offset-4 decoration-2 hover:opacity-80 transition-opacity"
+            >
+              ▶ Watch Recipe Video
+            </button>
+          </div>
+        )}
 
         {/* Ingredients */}
         {recipe.ingredients.length > 0 && (
