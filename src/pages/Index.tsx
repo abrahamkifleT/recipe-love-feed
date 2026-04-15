@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, LogIn, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useNavigate } from "react-router-dom";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
