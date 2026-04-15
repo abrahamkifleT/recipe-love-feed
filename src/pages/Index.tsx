@@ -40,7 +40,7 @@ const Index = () => {
   const paginatedRecipes = filtered.slice((currentPage - 1) * RECIPES_PER_PAGE, currentPage * RECIPES_PER_PAGE);
 
   // Reset to page 1 when filters change
-  const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); };
+  const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); setFilterOpen(false); };
   const handleSearchChange = (val: string) => { setSearchQuery(val); setCurrentPage(1); };
 
   const getInitials = () => {
