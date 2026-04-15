@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal, ScanSearch } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
@@ -87,6 +87,10 @@ const Index = () => {
                 </div>
               </SheetContent>
             </Sheet>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/food-analyzer")}>
+              <ScanSearch size={16} />
+              <span className="hidden sm:inline">Food AI</span>
+            </Button>
             {user ? (
               <>
                 <AddRecipeDialog

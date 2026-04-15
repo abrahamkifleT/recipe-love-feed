@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import RecipeDetail from "./pages/RecipeDetail";
+import FoodAnalyzerPage from "./pages/FoodAnalyzerPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/food-analyzer" element={<FoodAnalyzerPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
