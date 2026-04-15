@@ -106,22 +106,38 @@ export const useToggleLike = () => {
     },
     onMutate: async ({ recipeId, liked }) => {
       await queryClient.cancelQueries({ queryKey: ["recipes"] });
-      const previous = queryClient.getQueryData<RecipeWithAuthor[]>(["recipes", user?.id]);
+      await queryClient.cancelQueries({ queryKey: ["recipe", recipeId] });
+
+      const previousList = queryClient.getQueryData<RecipeWithAuthor[]>(["recipes", user?.id]);
+      const previousDetail = queryClient.getQueryData<RecipeWithAuthor | null>(["recipe", recipeId, user?.id]);
+
+      const updateRecipe = (r: RecipeWithAuthor) =>
+        r.id === recipeId
+          ? { ...r, liked_by_me: !liked, like_count: liked ? r.like_count - 1 : r.like_count + 1 }
+          : r;
+
       queryClient.setQueryData<RecipeWithAuthor[]>(["recipes", user?.id], (old) =>
-        old?.map((r) =>
-          r.id === recipeId
-            ? { ...r, liked_by_me: !liked, like_count: liked ? r.like_count - 1 : r.like_count + 1 }
-            : r
-        )
+        old?.map(updateRecipe)
       );
-      return { previous };
+
+      if (previousDetail) {
+        queryClient.setQueryData<RecipeWithAuthor | null>(["recipe", recipeId, user?.id], updateRecipe(previousDetail));
+      }
+
+      return { previousList, previousDetail, recipeId };
     },
     onError: (_err, _vars, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(["recipes", user?.id], context.previous);
+      if (context?.previousList) {
+        queryClient.setQueryData(["recipes", user?.id], context.previousList);
+      }
+      if (context?.previousDetail) {
+        queryClient.setQueryData(["recipe", context.recipeId, user?.id], context.previousDetail);
       }
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["recipes"] }),
+    onSettled: (_d, _e, vars) => {
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      queryClient.invalidateQueries({ queryKey: ["recipe", vars.recipeId] });
+    },
   });
 };
 
