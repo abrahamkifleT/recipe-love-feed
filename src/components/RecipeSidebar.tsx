@@ -21,11 +21,12 @@ const trending = [
 interface RecipeSidebarProps {
   selectedCategory: string | null;
   onSelectCategory: (cat: string | null) => void;
+  mobile?: boolean;
 }
 
-const RecipeSidebar = ({ selectedCategory, onSelectCategory }: RecipeSidebarProps) => {
+const RecipeSidebar = ({ selectedCategory, onSelectCategory, mobile }: RecipeSidebarProps) => {
   return (
-    <aside className="hidden lg:block w-64 shrink-0 space-y-8">
+    <aside className={mobile ? "space-y-8" : "hidden lg:block w-64 shrink-0 space-y-8"}>
       {/* Categories */}
       <div className="bg-card rounded-xl p-5 shadow-card">
         <h3 className="flex items-center gap-2 text-card-foreground text-base mb-4">

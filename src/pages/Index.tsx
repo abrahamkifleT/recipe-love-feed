@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, LogIn, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useNavigate } from "react-router-dom";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterOpen, setFilterOpen] = useState(false);
   const RECIPES_PER_PAGE = 9;
   const { user, signOut } = useAuth();
   const { data: recipes, isLoading } = useRecipes();
@@ -38,7 +40,7 @@ const Index = () => {
   const paginatedRecipes = filtered.slice((currentPage - 1) * RECIPES_PER_PAGE, currentPage * RECIPES_PER_PAGE);
 
   // Reset to page 1 when filters change
-  const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); };
+  const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); setFilterOpen(false); };
   const handleSearchChange = (val: string) => { setSearchQuery(val); setCurrentPage(1); };
 
   const getInitials = () => {
@@ -64,7 +66,27 @@ const Index = () => {
             />
           </div>
 
-          <div className="flex items-center gap-3 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+            {/* Mobile/Tablet filter button */}
+            <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="lg:hidden gap-1.5 relative">
+                  <SlidersHorizontal size={16} />
+                  <span className="hidden sm:inline">Filters</span>
+                  {selectedCategory && (
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-accent" />
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-80 p-0">
+                <SheetHeader className="p-5 pb-0">
+                  <SheetTitle>Browse Recipes</SheetTitle>
+                </SheetHeader>
+                <div className="p-5 overflow-y-auto max-h-[calc(100vh-4rem)]">
+                  <RecipeSidebar selectedCategory={selectedCategory} onSelectCategory={handleCategoryChange} mobile />
+                </div>
+              </SheetContent>
+            </Sheet>
             {user ? (
               <>
                 <AddRecipeDialog
