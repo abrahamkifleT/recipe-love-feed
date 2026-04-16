@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
-import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal, ScanSearch } from "lucide-react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal, ScanSearch, Loader2 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
