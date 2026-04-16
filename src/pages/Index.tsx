@@ -261,23 +261,7 @@ const Index = () => {
                     Next <ChevronRight size={16} />
                   </Button>
                 </div>
-              )}
-                    >
-                      {page}
-                    </Button>
-                  ))}
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentPage === totalPages}
-                    onClick={() => { setCurrentPage((p) => p + 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                    className="gap-1"
-                  >
-                    Next <ChevronRight size={16} />
-                  </Button>
-                </div>
-              )}
+              )
             </>
           )}
         </main>
