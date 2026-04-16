@@ -261,7 +261,8 @@ const Index = () => {
                     Next <ChevronRight size={16} />
                   </Button>
                 </div>
-              )
+              )}
+
             </>
           )}
         </main>
