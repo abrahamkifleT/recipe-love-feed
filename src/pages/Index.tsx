@@ -219,7 +219,15 @@ const Index = () => {
                 ))}
               </div>
 
-              {totalPages > 1 && (
+              {/* Infinite scroll sentinel for mobile/tablet */}
+              {useInfiniteScroll && visibleCount < filtered.length && (
+                <div ref={sentinelRef} className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              )}
+
+              {/* Desktop pagination */}
+              {!useInfiniteScroll && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-10">
                   <Button
                     variant="outline"
@@ -238,6 +246,22 @@ const Index = () => {
                       size="sm"
                       className="w-9 h-9 p-0"
                       onClick={() => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === totalPages}
+                    onClick={() => { setCurrentPage((p) => p + 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    className="gap-1"
+                  >
+                    Next <ChevronRight size={16} />
+                  </Button>
+                </div>
+              )}
                     >
                       {page}
                     </Button>
