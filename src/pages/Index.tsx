@@ -1,6 +1,17 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Search, Plus, LogIn, ChevronLeft, ChevronRight, SlidersHorizontal, ScanSearch, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+function useIsTablet() {
+  const [isTablet, setIsTablet] = useState(false);
+  useEffect(() => {
+    const check = () => setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isTablet;
+}
 import RecipeCard from "@/components/RecipeCard";
 import RecipeSidebar from "@/components/RecipeSidebar";
 import AddRecipeDialog from "@/components/AddRecipeDialog";
