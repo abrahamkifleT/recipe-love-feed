@@ -22,11 +22,16 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(9);
   const [filterOpen, setFilterOpen] = useState(false);
   const RECIPES_PER_PAGE = 9;
   const { user, signOut } = useAuth();
   const { data: recipes, isLoading } = useRecipes();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const useInfiniteScroll = isMobile || isTablet;
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => (recipes ?? []).filter((r) => {
     const matchesCategory = !selectedCategory || r.tags.includes(selectedCategory);
@@ -38,7 +43,33 @@ const Index = () => {
   }), [recipes, selectedCategory, searchQuery]);
 
   const totalPages = Math.ceil(filtered.length / RECIPES_PER_PAGE);
-  const paginatedRecipes = filtered.slice((currentPage - 1) * RECIPES_PER_PAGE, currentPage * RECIPES_PER_PAGE);
+  const paginatedRecipes = useInfiniteScroll
+    ? filtered.slice(0, visibleCount)
+    : filtered.slice((currentPage - 1) * RECIPES_PER_PAGE, currentPage * RECIPES_PER_PAGE);
+
+  // Infinite scroll observer
+  const loadMore = useCallback(() => {
+    setVisibleCount((prev) => Math.min(prev + 9, filtered.length));
+  }, [filtered.length]);
+
+  useEffect(() => {
+    if (!useInfiniteScroll || !sentinelRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && visibleCount < filtered.length) {
+          loadMore();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [useInfiniteScroll, visibleCount, filtered.length, loadMore]);
+
+  // Reset when filters change
+  useEffect(() => {
+    setVisibleCount(9);
+  }, [selectedCategory, searchQuery]);
 
   // Reset to page 1 when filters change
   const handleCategoryChange = (cat: string | null) => { setSelectedCategory(cat); setCurrentPage(1); setFilterOpen(false); };
